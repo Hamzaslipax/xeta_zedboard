@@ -71,7 +71,12 @@ architecture Behavioral of xtea is
     signal B_sum: std_logic_vector(31 downto 0);
     signal result_one: std_logic_vector(7 downto 0);
     
-   
+    signal key : STD_LOGIC_VECTOR(127 downto 0);
+//////////////////////
+    signal index_temp : unsigned(1 downto 0);
+
+
+
     type t_states is (idle,clockOne,clockTwo,clockThree);
     signal s_states : t_states;
 
@@ -79,6 +84,11 @@ architecture Behavioral of xtea is
     begin
         input_string_one <= (input_hexOne);
         input_string_two <= (input_hexOne);
+
+        key1 <= input_keyOne;
+        key2 <= (input_keyTwo);
+        key3 <= (input_keyThree);
+
     process(clk,reset)
     begin
         if reset = '1' then 
@@ -100,7 +110,14 @@ architecture Behavioral of xtea is
                --A_sum <= std_logic_vector (unsigned (input_string_one) srl 5);
                 
                 -- TODO 
-                B_temp <= B_sum & "0011";
+        
+                
+        
+        
+                index_temp <= B_sum & "0011";
+                k_temp <= key(to_integer(index_temp));
+                B_temp <= B_temp + k_temp;
+
                 s_states <= clockTwo;
             
             when clockTwo => 
